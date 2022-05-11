@@ -66,8 +66,8 @@ The SSM (Synapse SQL Migrator) is used and executed via command line arguments. 
 
 At a high level, the following process should be followed when building out a CI/CD process for SQL serverless database objects.
 1. Clone the Synapse SQL Migrator repo. 
-2. Build the solution .
-3. Run the SynapseSqlMigrator.exe with the required arguments.
+2. Build/publish the solution.
+3. Run `dotnet SynapseSqlMigrator.dll` with the required arguments. (This step executes the SQL scripts against the serverless pool).
 4. Clean up.
 5. Continue with other CI/CD tasks/steps. 
 

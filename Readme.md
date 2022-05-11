@@ -4,9 +4,9 @@ The Synapse SQL Migrator was created to help facilitate the migration and CI/CD 
 
 > Note: At the time of writing, SSDT does not support SQL Serverless.  This was created to bridge that gap. 
 
-This tool uses the third party [DbUp library](https://github.com/DbUp/DbUp) to help run SQL migrations that are included as part of a SQL Serverless deployment in Synapse.   This tool also uses Azure Blob Storage to keep track of previously run scripts via a CSV file.  Additionally, it uses Azure AD to authenticate against the SQL serverless database. Basically this tool is a superset of features on top of DbUp. 
+This tool uses the third party [DbUp library](https://github.com/DbUp/DbUp) to help run SQL mgirations/scripts that are required as part of a Synapse SQL Serverless deployment.   This tool also uses Azure Blob Storage to keep track of previously run scripts via a CSV file.  Additionally, it uses Azure AD to authenticate against the SQL serverless database. 
 
-It is expected that this be run as *part* of a CI/CD pipeline in either Azure DevOps or GitHub using GitHub Actions. The tool however can be used externally of those tools if required.  
+It is expected that this be run as *part* of a CI/CD pipeline in either Azure DevOps or GitHub using GitHub Actions. The tool however can be used externally of those CI/CD systems if required.  
 
 ![HighLevelProcess](Images/HighLevelProcess.png)
 

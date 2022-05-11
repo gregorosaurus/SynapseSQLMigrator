@@ -291,3 +291,4 @@ FodyWeavers.xsd
 /rpmbuild/RPMS
 /rpmbuild/SOURCES
 /Source/appsettings.Development.json
+Properties

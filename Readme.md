@@ -27,7 +27,7 @@ The SSM (Synapse SQL Migrator) is used and executed via command line arguments. 
 | --tenantid | The tenant ID that the service principal belongs to |
 | --sqlserver | The SQL server name of the Synapse Serverless database, example `bestserver-ondemand.sql.azuresynapse.net` |
 | --sqldb | The name of the SQL serverless database to run migrations against |
-| --scriptspath | The local path, absolute or relative, of a directory containing script files | 
+| --scriptspath | The local path, absolute or relative, of a directory containing script files.  Optional and defaults to the local_working_directory/Scripts | 
 
 ## CI/CD Pipelines
 

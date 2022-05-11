@@ -1,0 +1,50 @@
+# Basic SQL Serverless Migrations Action
+
+name: SQLServerlessMigration
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  AZURE_STORAGE_ACOUNT: saaccount
+  AZURE_STORAGE_CONTAINER: control
+  AZURE_STORAGE_PATH: synapse/journalcicd.csv
+  SERVICE_PRINCIPAL_ID: 2aa9e3fd-6e2e-4796-9057-e6f01de7111
+  AZURE_TENANT_ID: 72f988bf-86f1-41af-91ab-2d7cd0111111 
+  SQL_SERVER: best-ondemand.sql.azuresynapse.net
+  SQL_DATABASE: TestServerlessPool
+  SCRIPT_PATH: "synapse/db/sqlServerlessScripts"
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  runSqlMigrations:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out our own repository
+      - name: RepoCheckout
+        uses: actions/checkout@v3
+        with:
+          ref: 'collaboration'
+          path: 'synapse'
+        
+      - name: SSMCheckout
+        uses: actions/checkout@v3
+        with: 
+          repository: 'gregorosaurus/SynapseSQLMigrator'
+          path: 'ssm'
+      
+      
+      - name: Setup .NET CorePrepDotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+  
+      - name: Publish SSM
+        run: dotnet publish ssm/Source/SynapseSQLMigrator.sln -o ssm/publish
+      
+      - name: Run SQL Migrations
+        run: dotnet ssm/publish/SynapseSQLMigrator.dll --storage ${{ env.AZURE_STORAGE_ACOUNT }} --spid ${{ env.SERVICE_PRINCIPAL_ID }} --sppass ${{ secrets.SERVICE_PRINCIPAL_SECRET }}  --tenantid ${{ env.AZURE_TENANT_ID }}  --container ${{ env.AZURE_STORAGE_CONTAINER }} --path ${{ env.AZURE_STORAGE_PATH }} --sqlserver ${{ env.SQL_SERVER }} --sqldb ${{ env.SQL_DATABASE }} --scriptspath ${{ env.SCRIPT_PATH }}

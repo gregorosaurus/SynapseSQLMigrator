@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SQLServerlessMigrationHelper": {
+      "commandName": "Project",
+      "commandLineArgs": "--storage gmadlshared --spid 2aa9e3fd-6e2e-4796-9057-e6f01de79a5b --sppass spG8Q~y_aLSZpJz~fX5llGAngfzXzCJE3IS.Obq3 --tenantid 72f988bf-86f1-41af-91ab-2d7cd011db47  --container control --path synapse/sqljournal.csv --sqlserver gmsyntest01-ondemand.sql.azuresynapse.net --sqldb TestServerlessPool"
+    }
+  }
+}

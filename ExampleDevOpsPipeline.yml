@@ -1,0 +1,53 @@
+# Example pipeline for Azure DevOps.
+# The following variables are required!
+#  AZURE_STORAGE_ACOUNT - The name of the storage account
+#  AZURE_STORAGE_CONTAINER  - The container name in the storage account
+#  AZURE_STORAGE_PATH - The relative path within the storage container
+#  SERVICE_PRINCIPAL_ID - the ID of the service principal created
+#  AZURE_TENANT_ID  - The AAD tenant ID of the service principal
+#  SQL_SERVER - The sql server address
+#  SQL_DATABASE - the database name inside the sql server you want to upgrade
+#  SERVICE_PRINCIPAL_SECRET - The service principal secret.  IMPORTANT: ** This should be marked as a secret! **
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo Starting SQL Serverless Deploment Script
+  displayName: 'Run a Echo'
+
+- checkout: self
+  displayName: 'Check out the Synapse Repo'
+
+- powershell: |
+   git --version
+   git clone https://github.com/gregorosaurus/SynapseSQLMigrator.git 
+  displayName: "Clone Synapse SQL migrator"
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'SynapseSQLMigrator/Source/SynapseSQLMigrator.sln'
+    arguments: '-o SynapseSQLMigrator/publish'
+    zipAfterPublish: false
+    modifyOutputPath: false
+  displayName: "Publish SynapseSQLMigrator"
+
+- script: ls
+  displayName: 'List directory contents'
+
+- script: ls SynapseSQLMigrator/publish/
+  displayName: 'List publish contents'
+
+- script: dotnet --version
+  displayName: 'Get dotnet version'
+
+- script: /usr/bin/dotnet SynapseSQLMigrator/publish/SynapseSQLMigrator.dll --scriptspath db/sqlServerlessScripts --storage $(AZURE_STORAGE_ACOUNT) --spid $(SERVICE_PRINCIPAL_ID) --sppass $(SERVICE_PRINCIPAL_SECRET)  --tenantid $(AZURE_TENANT_ID)  --container $(AZURE_STORAGE_CONTAINER) --path $(AZURE_STORAGE_PATH) --sqlserver $(SQL_SERVER) --sqldb $(SQL_DATABASE)
+  displayName: 'Run SQL Migrations'
+  timeoutInMinutes: 2
+  retryCountOnTaskFailure: 2
+
